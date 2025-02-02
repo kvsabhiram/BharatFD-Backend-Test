@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FAQ Form</title>
+  <script src="https://cdn.ckeditor.com/ckeditor5/40.0.0/classic/ckeditor.js"></script>
+</head>
+<body>
+  <h1>Create FAQ</h1>
+  <form id="faqForm">
+    <label for="question">Question:</label><br>
+    <input type="text" id="question" name="question" required><br><br>
+
+    <label for="answer">Answer:</label><br>
+    <textarea id="answer" name="answer" required></textarea><br><br>
+
+    <button type="submit">Submit</button>
+  </form>
+
+  <script>
+    // Initialize CKEditor on the answer textarea
+    ClassicEditor
+      .create(document.querySelector('#answer'))
+      .catch(error => {
+        console.error(error);
+      });
+
+    // Handle form submission
+    document.getElementById('faqForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const question = document.getElementById('question').value;
+      const answer = document.getElementById('answer').value;
+
+      // Send data to the backend API
+      const response = await fetch('http://localhost:8000/api/faqs', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ question, answer }),
+      });
+      if (response.ok) {
+        alert('FAQ created successfully!');
+      } else {
+        alert('Failed to create FAQ.');
+      }
+    });
+  </script>
+</body>
+</html>
